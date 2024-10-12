@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { getSingleQuiz } from "../controllers/quiz.controller";
+import { createQuiz, getSingleQuiz } from "../controllers/quiz.controller";
 
 const quizRouter = Router()
 
 quizRouter.get('/get-quiz/:id', getSingleQuiz)
+quizRouter.post('/create-quiz', createQuiz)
 
 
 export default quizRouter

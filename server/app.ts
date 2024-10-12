@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import userRouter from "./routes/user.route";
 import { ErrorMiddleware } from "./middleware/error";
+import quizRouter from "./routes/quiz.route";
 
 export const app = express();
 
@@ -35,6 +36,7 @@ app.get('/', (req: Request, res: Response,) => {
 
 // mount routes
 app.use("/api/v1/auth", userRouter)
+app.use("/api/v1/quiz", quizRouter)
 
 
 // handle Error by using OOPS
