@@ -40,9 +40,47 @@ export const getSingleQuiz = catchAsyncError(async (req: Request, res: Response,
 
 
 
-// =========================== GET SINGLE QUIZ ===========================
-
+// =========================== CREATE QUIZ ===========================
 export const createQuiz = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { title, questions, description } = req.body as IQuiz;
+
+        // validate data
+        if (!title || !questions || !description) {
+            return next(new ErrorHandler('title , questions, description are required', 400, "Error while creating quiz"));
+        }
+
+        const formattedQuestions = questions.map(q => ({
+            ...q,
+            correctAnswer: Number(q.correctAnswer)  // Convert answer to a number
+        }));
+
+        // create quiz in DB
+        const quiz = await  QuizModel.create({
+            title, description,
+            questions: formattedQuestions,
+            // id: Math.floor(1000 + Math.random() * 9000)  // Generate a unique 4-digit ID
+        });
+
+
+        // send quiz response
+        res.status(200).json({
+            success: true,
+            message: 'Quiz created successfully',
+            quiz
+        });
+
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400, "Error while creating"));
+    }
+})
+
+
+
+
+
+// =========================== GET ALL QUIZES ===========================
+export const createAllQuizes = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { title, questions, description } = req.body as IQuiz;
 

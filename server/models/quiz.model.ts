@@ -19,27 +19,28 @@ export interface IQuiz extends Document {
 
 // Quiz Schema
 const QuizSchema: Schema<IQuiz> = new Schema({
-    title: { 
-        type: String, 
-        required: true
-     },
-    description: { 
+    title: {
         type: String,
-         required: true
-     },
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
     questions: [{
-        question: { 
-            type: String, 
+        question: {
+            type: String,
             required: true
-         },
-        options: [{ 
-            type: String, 
+        },
+        options: [{
+            type: String,
             required: true
-         }],
+        }],
         correctAnswer: {
-             type: Number, 
+            type: Number,
+            select: false, // by default, answer will not fetched, when fetching quiz data
             required: true
-         }
+        }
     }]
 }, { timestamps: true });
 
