@@ -99,19 +99,20 @@ export const getAllQuizzes = catchAsyncError(async (req: Request, res: Response,
 
 
 
-// =========================== GET ALL QUIZES ===========================
+// =========================== DELETE QUIZE ===========================
 export const deleteQuiz = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { quizId } = req.params;
         if (!quizId) {
             return next(new ErrorHandler('quizId is required', 400, "Error while deleting quiz"));
-
         }
+
+        // find by id and delete
         const quiz = await QuizModel.findByIdAndDelete(quizId);
 
         if (!quiz) return next(new ErrorHandler('Quiz not found', 404, "Error while deleting quiz"));
 
-        // send quiz response
+        // send delete response
         res.status(200).json({
             success: true,
             message: 'Quiz deleted successfully',
@@ -119,5 +120,44 @@ export const deleteQuiz = catchAsyncError(async (req: Request, res: Response, ne
 
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 400, "Error while deleting quiz"));
-    } 
+    }
+})
+
+
+
+// =========================== DELETE QUIZE ===========================
+export const updateQuestion = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { quizId, questionIndex } = req.params;
+        const { question, options, correctAnswer } = req.body as any;
+
+        if (!quizId || !questionIndex) {
+            return next(new ErrorHandler('quizId, questionIndex  is required', 400, "Error while deleting quiz"));
+        }
+
+        // find quiz in DB
+        const quiz = await QuizModel.findById(quizId);
+        if (!quiz) return res.status(404).json({ message: 'Quiz not found' });
+
+        if (Number(questionIndex) >= quiz.questions.length) {
+            return res.status(404).json({ message: 'Question not found' });
+        }
+
+        // update question
+        const questionToUpdate = quiz.questions[Number(questionIndex)];
+        questionToUpdate.question = question || questionToUpdate.question;
+        questionToUpdate.options = options || questionToUpdate.options;
+        questionToUpdate.correctAnswer = correctAnswer || questionToUpdate.correctAnswer;
+
+        await quiz.save();
+
+        // send response
+        res.status(200).json({
+            success: true,
+            message: 'Question updated successfully',
+            quiz
+        });
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400, "Error while updating quiz question"));
+    }
 })
