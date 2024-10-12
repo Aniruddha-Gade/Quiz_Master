@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
 import userRouter from "./routes/user.route";
+import { ErrorMiddleware } from "./middleware/error";
 
 export const app = express();
 
@@ -36,3 +37,5 @@ app.get('/', (req: Request, res: Response,) => {
 app.use("/api/v1/auth", userRouter)
 
 
+// handle Error by using OOPS
+app.use(ErrorMiddleware) 

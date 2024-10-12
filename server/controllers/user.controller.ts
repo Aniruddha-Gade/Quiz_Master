@@ -132,12 +132,14 @@ export const activateUser = catchAsyncError(async (req: Request, res: Response, 
             return next(new ErrorHandler("Invalid activation code", 400, "Error while activating user"));
         }
 
-        const { username, email, password, } = newUser.user;
+        const { username, email, password, accountType, year, department, regId, dob } = newUser.user;
         // console.log({ name, email, password, accountType })
 
         // Store user data in the database
         const user = await UserModel.create({
-            username, email, password,
+            username,
+            email, password,
+            accountType, year, department, regId, dob
         });
 
         res.status(201).json({
