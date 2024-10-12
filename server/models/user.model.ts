@@ -4,11 +4,17 @@ import jwt from 'jsonwebtoken'
 
 
 
+interface IQuizResult {
+    quizId: mongoose.Types.ObjectId; // Reference to the quiz
+    score: number;                   // The user's score for that quiz
+}
+
 // user interface
 export interface IUser extends Document {
     username: string;
     email: string;
     password: string;
+    quizzesTaken: IQuizResult[];      // Array of quiz results
     comparePassword: (password: string) => Promise<boolean>;
     signAccessToken: () => string;
     signRefreshToken: () => string;
@@ -29,8 +35,19 @@ const UserSchema: Schema<IUser> = new Schema({
     password: {
         type: String,
         required: true
-    }
+    },
+    // Array to store multiple quiz results
+    quizzesTaken: [
+        {
+            quizId: { type: mongoose.Schema.Types.ObjectId },
+            score: { type: Number },
+            // resultArray: { type: [Number] },
+        },
+    ],
 }, { timestamps: true });
+
+
+
 
 
 // Pre-middleware 
