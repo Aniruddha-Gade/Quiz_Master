@@ -136,10 +136,13 @@ export const updateQuestion = catchAsyncError(async (req: Request, res: Response
         }
 
         // find quiz in DB
-        const quiz = await QuizModel.findById(quizId);
-        if (!quiz) return res.status(404).json({ message: 'Quiz not found' });
-
-        if (Number(questionIndex) >= quiz.questions.length) {
+        const quiz = await QuizModel.findById(quizId).select('+questions.correctAnswer');
+        // console.log("quiz = ",quiz)
+        if (!quiz){
+            return next(new ErrorHandler('Quiz not found', 400, "Error while updating quiz question"));
+        }
+            
+        if (Number(questionIndex) >= quiz.questions?.length) {
             return res.status(404).json({ message: 'Question not found' });
         }
 
