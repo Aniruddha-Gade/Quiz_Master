@@ -3,6 +3,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
 
 
+const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
 
 interface IQuizResult {
     quizId: mongoose.Types.ObjectId; // Reference to the quiz
@@ -14,6 +17,11 @@ export interface IUser extends Document {
     username: string;
     email: string;
     password: string;
+    accountType: 'Admin' | 'Student';
+    year: string;
+    department: string;
+    regId: string;
+    dob: Date;
     quizzesTaken: IQuizResult[];      // Array of quiz results
     comparePassword: (password: string) => Promise<boolean>;
     signAccessToken: () => string;
@@ -29,11 +37,39 @@ const UserSchema: Schema<IUser> = new Schema({
     },
     email: {
         type: String,
-        required: true,
+        required: [true, "Please enter your email"],
+        validate: {
+            validator: function (value: string) {
+                return emailRegexPattern.test(value);
+            },
+            message: "Please enter a valid email"
+        },
         unique: true
     },
     password: {
         type: String,
+        required: true
+    },
+    accountType: {
+        type: String,
+        enum: ['Admin', 'Student'],
+        default: "Student",
+        reuired: true
+    },
+    year: {
+        type: String,
+        required: true
+    },
+    department: {
+        type: String,
+        required: true
+    },
+    regId: {
+        type: String,
+        required: true
+    },
+    dob: {
+        type: Date,
         required: true
     },
     // Array to store multiple quiz results
