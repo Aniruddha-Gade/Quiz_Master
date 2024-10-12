@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-
+import userRouter from "./routes/user.route";
 
 export const app = express();
 
@@ -30,3 +30,9 @@ app.get('/', (req: Request, res: Response,) => {
     <p>Everything is OK</p>
     </div>`);
 })
+
+
+// mount routes
+app.use("/api/v1/auth", userRouter)
+
+

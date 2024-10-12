@@ -46,5 +46,5 @@ const QuizSchema: Schema<IQuiz> = new Schema({
 
 
 
-const UserModel: Model<IQuiz> = mongoose.model("Quiz", QuizSchema)
-export default UserModel
+const QuizModel: Model<IQuiz> = mongoose.model("Quiz", QuizSchema)
+export default QuizModel
