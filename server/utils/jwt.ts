@@ -54,6 +54,7 @@ export const sendToken = (user: IUser, statusCode: number, res: Response) => {
 
     res.status(statusCode).json({
         success: true,
+        message: "You have Login successfully",
         user,
         accessToken,
     });

@@ -6,6 +6,7 @@ import path from 'path'
 import ErrorHandler from '../utils/ErrorHandler';
 import sendMail from '../utils/sendMail';
 import { catchAsyncError } from '../utils/catchAsyncError';
+import { sendToken } from '../utils/jwt';
 require('dotenv').config()
 
 
@@ -142,4 +143,51 @@ export const activateUser = catchAsyncError(async (req: Request, res: Response, 
     }
 }
 );
+
+
+
+
+
+
+
+// =========================== LOGIN USER ===========================
+interface ILoginRequest {
+    email: string,
+    password: string
+}
+
+export const loginUser = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { email, password } = req.body as ILoginRequest
+
+        // validate data
+        if (!email || !password) {
+            return next(new ErrorHandler('Please enter your email and password', 400, "Error while loging user"));
+        }
+
+        // check user has register or not
+        const user = await UserModel.findOne({ email }).select('+password')
+        if (!user) {
+            return next(new ErrorHandler('Invalid email', 400, "Error while loging user"));
+        }
+        // console.log({ user })
+
+
+        // compare user entered password , with hashed password store in DB
+        const isPasswordMatch = await user.comparePassword(password)
+        if (!isPasswordMatch) {
+            return next(new ErrorHandler('Invalid password', 400, "Error while loging user"));
+        }
+        // set the password field to an empty string in the user object ,
+        user.password = ''
+
+
+        // send Token
+        sendToken(user, 200, res)
+
+
+    } catch (error:any) {
+        return next(new ErrorHandler(error.message, 400, "Error while loging user"));
+    }
+})
 
