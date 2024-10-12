@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
-import UserModel from '../models/user.model';
+import UserModel, { IUser } from '../models/user.model';
 import ejs from 'ejs'
 import path from 'path'
 import ErrorHandler from '../utils/ErrorHandler';
@@ -22,7 +22,7 @@ export const registerUser = catchAsyncError(async (req: Request, res: Response, 
         const { username, email, password, } = req.body as IRagistrationBody
 
         // validate data
-        if (!username || !email || !password ) {
+        if (!username || !email || !password) {
             return next(new ErrorHandler('All fields are required', 400, "Error while registering user"))
         }
 
@@ -44,7 +44,7 @@ export const registerUser = catchAsyncError(async (req: Request, res: Response, 
         const activationCode = activationToken.activationCode
 
         // send otp through email 
-        const emailData = { user: { name: user.username,  }, activationCode }
+        const emailData = { user: { name: user.username, }, activationCode }
         const html = await ejs.renderFile(path.join(__dirname, "../mails/activation-mail.ejs"), emailData)
 
 
@@ -62,7 +62,7 @@ export const registerUser = catchAsyncError(async (req: Request, res: Response, 
                 activationToken: activationToken.token,
                 message: `Please check your email : ${email} to activate your account`
             })
-        } catch (error:any) {
+        } catch (error: any) {
             console.log(`Error while sending email to user with email : ${email} => `, error)
             return next(new ErrorHandler(error.message, 400, "Error while registering user"))
         }
@@ -96,4 +96,50 @@ export const createActivationToken = (user: any): IActivationToken => {
 
     return { token, activationCode };
 };
+
+
+
+
+// =========================== ACTIVATE USER ===========================
+interface IActivationRequest {
+    activation_token: string,
+    activation_code: string
+}
+
+export const activateUser = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { activation_token, activation_code } = req.body as IActivationRequest;
+
+        if (!activation_token || !activation_code) {
+            return next(new ErrorHandler('activation_token and activation_code are required', 400, "Error while activating user"));
+        }
+
+        const newUser: { user: IUser; activationCode: string } = jwt.verify(
+            activation_token,
+            process.env.ACTIVATION_SECRET as string
+        ) as { user: IUser; activationCode: string };
+
+
+        if (newUser.activationCode !== activation_code) {
+            return next(new ErrorHandler("Invalid activation code", 400, "Error while activating user"));
+        }
+
+        const { username, email, password, } = newUser.user;
+        // console.log({ name, email, password, accountType })
+
+        // Store user data in the database
+        const user = await UserModel.create({
+            username, email, password,
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "User registered successfully 👍",
+        });
+    } catch (error: any) {
+        console.log(error);
+        return next(new ErrorHandler(error.message, 400, "Error while activating user"));
+    }
+}
+);
 
