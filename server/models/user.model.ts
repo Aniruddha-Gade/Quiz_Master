@@ -105,14 +105,14 @@ UserSchema.methods.comparePassword = async function (enteredPassword: string): P
 
 // sign Access Token
 UserSchema.methods.signAccessToken = function () {
-    return jwt.sign({ _id: this._id, email: this.email, username: this.username }, process.env.ACCESS_TOKEN_SECRET || '', {
+    return jwt.sign({ _id: this._id, email: this.email, accountType: this.accountType, username: this.username, regId: this.regId }, process.env.ACCESS_TOKEN_SECRET || '', {
         expiresIn: '5m'
     })
 }
 
 // sign Refresh Token
 UserSchema.methods.signRefreshToken = function () {
-    return jwt.sign({ _id: this._id, email: this.email, username: this.username }, process.env.REFRESH_TOKEN_SECRET || '', {
+    return jwt.sign({ _id: this._id, email: this.email, accountType: this.accountType, username: this.username, regId: this.regId }, process.env.REFRESH_TOKEN_SECRET || '', {
         expiresIn: '3d'
     })
 }
