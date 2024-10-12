@@ -56,7 +56,7 @@ export const createQuiz = catchAsyncError(async (req: Request, res: Response, ne
         }));
 
         // create quiz in DB
-        const quiz = await  QuizModel.create({
+        const quiz = await QuizModel.create({
             title, description,
             questions: formattedQuestions,
             // id: Math.floor(1000 + Math.random() * 9000)  // Generate a unique 4-digit ID
@@ -80,33 +80,15 @@ export const createQuiz = catchAsyncError(async (req: Request, res: Response, ne
 
 
 // =========================== GET ALL QUIZES ===========================
-export const createAllQuizes = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+export const getAllQuizzes = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { title, questions, description } = req.body as IQuiz;
-
-        // validate data
-        if (!title || !questions || !description) {
-            return next(new ErrorHandler('title , questions, description are required', 400, "Error while creating quiz"));
-        }
-
-        const formattedQuestions = questions.map(q => ({
-            ...q,
-            correctAnswer: Number(q.correctAnswer)  // Convert answer to a number
-        }));
-
-        // create quiz in DB
-        const quiz = await  QuizModel.create({
-            title, description,
-            questions: formattedQuestions,
-            // id: Math.floor(1000 + Math.random() * 9000)  // Generate a unique 4-digit ID
-        });
-
+        const quizzes = await QuizModel.find({});
 
         // send quiz response
         res.status(200).json({
             success: true,
-            message: 'Quiz created successfully',
-            quiz
+            message: 'All Quizzes fetched successfully',
+            quizzes
         });
 
     } catch (error: any) {
