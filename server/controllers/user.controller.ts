@@ -16,15 +16,22 @@ interface IRagistrationBody {
     username: string,
     email: string,
     password: string,
+    accountType: 'Admin' | 'Student',
+    year: string,
+    department: string,
+    regId: string,
+    dob: Date,
 }
 
 export const registerUser = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { username, email, password, } = req.body as IRagistrationBody
+        const { username, email, password, accountType, year, department, regId, dob } = req.body as IRagistrationBody
 
         // validate data
-        if (!username || !email || !password) {
-            return next(new ErrorHandler('All fields are required', 400, "Error while registering user"))
+        if (!username || !email || !password || !accountType || !department || !year || !regId || !dob) {
+            return next(new ErrorHandler('All fields are required - username, email, password, accountType, year, department, regId, dob',
+                400, "Error while registering user")
+            )
         }
 
         // check user already exist or not
@@ -36,8 +43,8 @@ export const registerUser = catchAsyncError(async (req: Request, res: Response, 
         // create user data
         const user: IRagistrationBody = {
             username,
-            email,
-            password,
+            email, password,
+            accountType, year, department, regId, dob
         }
 
         // create token and OTP
@@ -186,7 +193,7 @@ export const loginUser = catchAsyncError(async (req: Request, res: Response, nex
         sendToken(user, 200, res)
 
 
-    } catch (error:any) {
+    } catch (error: any) {
         return next(new ErrorHandler(error.message, 400, "Error while loging user"));
     }
 })
