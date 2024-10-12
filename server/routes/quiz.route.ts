@@ -1,12 +1,20 @@
 import { Router } from "express";
-import { createQuiz, getAllQuizzes, getSingleQuiz } from "../controllers/quiz.controller";
+import { createQuiz, deleteQuiz, getAllQuizzes, getSingleQuiz } from "../controllers/quiz.controller";
 import { isAdmin, isAuthenticated } from "../middleware/auth";
 
 const quizRouter = Router()
 
-quizRouter.get('/get-quiz/:id', getSingleQuiz)
-quizRouter.post('/create-quiz', createQuiz)
+
+// ========================== ONLY FOR AUTHENICATED STUDENT ==========================
+quizRouter.get('/get-quiz/:quizId', getSingleQuiz)
 quizRouter.get('/get-all-quizzes', getAllQuizzes)
+
+
+
+
+// ========================== ONLY FOR ADMIN ==========================
+quizRouter.post('/create-quiz', createQuiz)
+quizRouter.delete('/delete-quiz/:quizId', deleteQuiz)
 
 
 export default quizRouter
