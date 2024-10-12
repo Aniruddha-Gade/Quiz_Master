@@ -1,5 +1,7 @@
 import mongoose, { Document, Model, Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken'
+
 
 
 // user interface
@@ -8,6 +10,8 @@ export interface IUser extends Document {
     email: string;
     password: string;
     comparePassword: (password: string) => Promise<boolean>;
+    signAccessToken: () => string;
+    signRefreshToken: () => string;
 }
 
 
@@ -43,6 +47,21 @@ UserSchema.pre<IUser>('save', async function (next) {
 // compare user entered password , with hashed password store in DB
 UserSchema.methods.comparePassword = async function (enteredPassword: string): Promise<boolean> {
     return await bcrypt.compare(enteredPassword, this.password)
+}
+
+
+// sign Access Token
+UserSchema.methods.signAccessToken = function () {
+    return jwt.sign({ _id: this._id, email: this.email, username: this.username }, process.env.ACCESS_TOKEN_SECRET || '', {
+        expiresIn: '5m'
+    })
+}
+
+// sign Refresh Token
+UserSchema.methods.signRefreshToken = function () {
+    return jwt.sign({ _id: this._id, email: this.email, username: this.username }, process.env.REFRESH_TOKEN_SECRET || '', {
+        expiresIn: '3d'
+    })
 }
 
 
