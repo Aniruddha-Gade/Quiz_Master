@@ -7,7 +7,6 @@ const quizRouter = Router()
 
 // ========================== ONLY FOR AUTHENICATED STUDENT ==========================
 quizRouter.get('/get-quiz/:quizId', getSingleQuiz)
-quizRouter.get('/get-all-quizzes', getAllQuizzes)
 
 
 
@@ -17,6 +16,7 @@ quizRouter.post('/create-quiz', createQuiz)
 quizRouter.delete('/delete-quiz/:quizId', deleteQuiz)
 quizRouter.put('/update-question/:quizId/:questionIndex', updateQuestion);
 quizRouter.delete('/delete-question/:quizId/:questionIndex', deleteQuestion);
+quizRouter.get('/get-all-quizzes', getAllQuizzes)
 
 
 export default quizRouter
