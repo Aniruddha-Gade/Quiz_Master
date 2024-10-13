@@ -7,6 +7,11 @@ Quiz Master is a web application that allows users to create, manage, and take q
 It supports multiple user roles, including Admin and Student, and <br/>
 offers functionalities like quiz creation, submission, and score tracking.
 
+
+<h2>
+Postman Collection 📬 : [  https://documenter.getpostman.com/view/29064533/2sAXxS8rwB  ]
+</h2>
+
 ## 🛠 Technology Stack
 - **Backend**: Node.js, Express.js 🚀
 - **Database**: MongoDB 📦
