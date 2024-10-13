@@ -13,7 +13,8 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "baseUrl": "./",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "types": ["node"]
   },
   "include": ["types/**/*", "lib/**/*.ts"], // This includes all TypeScript files in the specified directories
   "exclude": ["node_modules"], // Exclude node_modules from compilation
