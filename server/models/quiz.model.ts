@@ -1,4 +1,4 @@
-import mongoose, { Document, Model, Schema } from 'mongoose';
+import mongoose, { Document, Model, Schema, ObjectId } from 'mongoose';
 
 
 // Question interface
@@ -14,6 +14,7 @@ export interface IQuiz extends Document {
     title: string;
     description: string;
     questions: IQuestion[];
+    takenBy: ObjectId[];
 }
 
 
@@ -41,7 +42,13 @@ const QuizSchema: Schema<IQuiz> = new Schema({
             select: false, // by default, answer will not fetched, when fetching quiz data
             required: true
         }
-    }]
+    }],
+    // list of all students who has given quiz
+    takenBy: [{
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }],
+    
 }, { timestamps: true });
 
 

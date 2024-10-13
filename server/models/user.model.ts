@@ -8,8 +8,9 @@ const emailRegexPattern: RegExp = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 
 interface IQuizResult {
-    quizId: mongoose.Types.ObjectId; // Reference to the quiz
+    quizId: mongoose.Types.ObjectId;  // Reference to the quiz
     score: number;                   // The user's score for that quiz
+    resultArray: number[]           // This contains 1s and 0s for correct/incorrect answers
 }
 
 // user interface
@@ -75,9 +76,9 @@ const UserSchema: Schema<IUser> = new Schema({
     // Array to store multiple quiz results
     quizzesTaken: [
         {
-            quizId: { type: mongoose.Schema.Types.ObjectId },
+            quizId: { type: mongoose.Schema.Types.ObjectId, ref: "Quiz" },
             score: { type: Number },
-            // resultArray: { type: [Number] },
+            resultArray: { type: [Number] },
         },
     ],
 }, { timestamps: true });
