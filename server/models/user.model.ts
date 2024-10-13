@@ -13,21 +13,21 @@ interface IQuizResult {
     resultArray: number[]           // This contains 1s and 0s for correct/incorrect answers
 }
 
-// user interface
-export interface IUser extends Document {
-    username: string;
-    email: string;
-    password: string;
-    accountType: 'Admin' | 'Student';
-    year: string;
-    department: string;
-    regId: string;
-    dob: Date;
-    quizzesTaken: IQuizResult[];      // Array of quiz results
-    comparePassword: (password: string) => Promise<boolean>;
-    signAccessToken: () => string;
-    signRefreshToken: () => string;
-}
+    // user interface
+    export interface IUser extends Document {
+        username: string;
+        email: string;
+        password: string;
+        accountType: 'Admin' | 'Student';
+        year: string;
+        department: string;
+        regId: string;
+        dob: Date;
+        quizzesTaken: IQuizResult[];      // Array of quiz results
+        comparePassword: (password: string) => Promise<boolean>;
+        signAccessToken: () => string;
+        signRefreshToken: () => string;
+    }
 
 
 // user schema

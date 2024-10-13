@@ -1,11 +1,18 @@
-
 import * as express from 'express';
-import { IUser } from './../models/user.model';
+
+export interface IUser {
+  _id: string;
+  email: string;
+  accountType: string;
+  username: string;
+  regId: string;
+}
+
 
 declare global {
   namespace Express {
     interface Request {
-      user?: IUser
+      user?: IUser; 
     }
   }
 }

@@ -13,10 +13,9 @@
     "resolveJsonModule": true,
     "baseUrl": "./",
     "outDir": "./dist",
-    "typeRoots": ["./node_modules/@types", "./types"], // Add your custom types folder here
+    "typeRoots": ["./node_modules/@types", "./types"],
     "types": ["node"] 
   },
   "include": ["types/**/*", "lib/**/*.ts", "server.ts"],
-  "exclude": ["node_modules"],
-  "files": ["types.d.ts"]
+  "exclude": ["node_modules"]
 }
