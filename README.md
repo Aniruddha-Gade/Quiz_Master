@@ -9,7 +9,8 @@ offers functionalities like quiz creation, submission, and score tracking.
 
 
 <h2>
-Postman Collection 📬 : [  https://documenter.getpostman.com/view/29064533/2sAXxS8rwB  ]
+Postman Collection 📬 : .<br/>
+  [  https://documenter.getpostman.com/view/29064533/2sAXxS8rwB  ]
 </h2>
 
 ## 🛠 Technology Stack
