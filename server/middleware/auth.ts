@@ -27,7 +27,6 @@ export const isAuthenticated = catchAsyncError(async (req: Request, res: Respons
 
         // store in request
         req.user = decodeToken
-        // console.log('req.user = ', req.user)
 
         // call next middleware
         next()

@@ -1,17 +1,21 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",                                
-    "jsx": "react-jsx", 
-    "esModuleInterop": true,                             
-    "forceConsistentCasingInFileNames": true,            
-    "strict": true,                                     
-    "skipLibCheck": true,                                
+    "target": "es6",
+    "module": "commonjs",
+    "jsx": "react-jsx",
+    "pretty": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./types"],
     "moduleResolution": "node",
-    "resolveJsonModule": true, // Enable this if you import .json files
-    "baseUrl": "./", // Optional, for setting up path aliases
-    "paths": { /* Add path aliases if necessary */ },
-    "outDir": "./dist" // Optional, for specifying output directory
-  }
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "outDir": "./dist"
+  },
+  "include": ["types/**/*", "lib/**/*.ts"], // This includes all TypeScript files in the specified directories
+  "exclude": ["node_modules"], // Exclude node_modules from compilation
+  "files": ["types.d.ts"] // Include specific declaration file
 }

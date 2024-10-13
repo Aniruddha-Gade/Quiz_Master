@@ -6,7 +6,7 @@ const quizRouter = Router()
 
 
 // ========================== ONLY FOR AUTHENICATED STUDENT ==========================
-quizRouter.get('/get-quiz/:quizId', getSingleQuiz)
+quizRouter.get('/get-quiz/:quizId',isAuthenticated, getSingleQuiz)
 quizRouter.post('/submit-quiz', submitQuiz)
 
 
