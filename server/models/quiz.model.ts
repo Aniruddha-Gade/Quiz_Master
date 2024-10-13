@@ -8,17 +8,22 @@ export interface IQuestion {
     correctAnswer: number; // Index of the correct answer in the options array
 }
 
+// user data interface
+export interface ITakenBy {
+    userId: Schema.Types.ObjectId;
+    score: number;
+}
 
-// Quiz interface
+// =================== Quiz interface ===================
 export interface IQuiz extends Document {
     title: string;
     description: string;
     questions: IQuestion[];
-    takenBy: ObjectId[];
+    takenBy: ITakenBy[];
 }
 
 
-// Quiz Schema
+// =================== Quiz Schema ===================
 const QuizSchema: Schema<IQuiz> = new Schema({
     title: {
         type: String,
@@ -45,10 +50,19 @@ const QuizSchema: Schema<IQuiz> = new Schema({
     }],
     // list of all students who has given quiz
     takenBy: [{
-        type: Schema.Types.ObjectId,
-        ref: "User"
-    }],
-    
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User', // Reference to User model (student ID)
+            select: false, // Not selected by default
+            required: true
+        },
+        score: {
+            type: Number, // Student's score for the quiz
+            select: false, // Not selected by default
+            required: true
+        }
+    }]
+
 }, { timestamps: true });
 
 
