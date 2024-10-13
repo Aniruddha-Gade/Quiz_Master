@@ -9,14 +9,13 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types", "./types"],
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "baseUrl": "./",
     "outDir": "./dist",
-    "types": ["node"]
+    "types": ["node"] // This includes Node.js types
   },
-  "include": ["types/**/*", "lib/**/*.ts"], // This includes all TypeScript files in the specified directories
-  "exclude": ["node_modules"], // Exclude node_modules from compilation
-  "files": ["types.d.ts"] // Include specific declaration file
+  "include": ["types/**/*", "lib/**/*.ts", "server.ts"], // Include the relevant directories and files
+  "exclude": ["node_modules"],
+  "files": ["types.d.ts"] 
 }
