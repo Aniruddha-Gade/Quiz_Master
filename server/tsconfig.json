@@ -13,9 +13,8 @@
     "resolveJsonModule": true,
     "baseUrl": "./",
     "outDir": "./dist",
-    "types": ["node"] // This includes Node.js types
+    "types": ["node", "./types/express.d.ts"] 
   },
-  "include": ["types/**/*", "lib/**/*.ts", "server.ts"], // Include the relevant directories and files
-  "exclude": ["node_modules"],
-  "files": ["types.d.ts"] 
+  "include": ["types/**/*", "lib/**/*.ts", "server.ts","types.d.ts"],
+  "exclude": ["node_modules"]
 }
