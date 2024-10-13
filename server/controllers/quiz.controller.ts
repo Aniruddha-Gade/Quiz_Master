@@ -131,6 +131,7 @@ export const updateQuestion = catchAsyncError(async (req: Request, res: Response
         const { quizId, questionIndex } = req.params;
         const { question, options, correctAnswer } = req.body as any;
 
+        // validate data
         if (!quizId || !questionIndex) {
             return next(new ErrorHandler('quizId, questionIndex  is required', 400, "Error while deleting quiz"));
         }
@@ -138,10 +139,10 @@ export const updateQuestion = catchAsyncError(async (req: Request, res: Response
         // find quiz in DB
         const quiz = await QuizModel.findById(quizId).select('+questions.correctAnswer');
         // console.log("quiz = ",quiz)
-        if (!quiz){
-            return next(new ErrorHandler('Quiz not found', 400, "Error while updating quiz question"));
+        if (!quiz) {
+            return next(new ErrorHandler('Quiz not found', 404, "Error while updating quiz question"));
         }
-            
+
         if (Number(questionIndex) >= quiz.questions?.length) {
             return res.status(404).json({ message: 'Question not found' });
         }
@@ -162,5 +163,45 @@ export const updateQuestion = catchAsyncError(async (req: Request, res: Response
         });
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 400, "Error while updating quiz question"));
+    }
+})
+
+
+
+// =========================== DELETE QUIZE ===========================
+export const deleteQuestion = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { quizId, questionIndex } = req.params;
+
+        // validate data
+        if (!quizId || !questionIndex) {
+            return next(new ErrorHandler('quizId, questionIndex are required', 400, "Error while deleting quiz question"));
+        }
+
+        // find quiz from DB
+        const quiz = await QuizModel.findById(quizId);
+        if (!quiz) {
+            return next(new ErrorHandler('Quiz not found', 404, "Error while deleting quiz question"));
+        }
+
+        // check Is question present or not
+        if (Number(questionIndex) >= quiz.questions.length) {
+            return res.status(404).json({ success: false, message: 'Question not found' });
+        }
+
+        // delete question by index
+        quiz.questions.splice(Number(questionIndex), 1);
+        await quiz.save();
+
+
+        // send response
+        res.status(200).json({
+            success: true,
+            message: 'Question deleted successfully',
+            quiz
+        });
+
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400, "Error while deleting quiz question"));
     }
 })
