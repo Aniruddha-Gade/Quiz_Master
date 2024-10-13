@@ -2,6 +2,7 @@ import { Response, Request, NextFunction } from 'express';
 import QuizModel, { IQuiz } from "../models/quiz.model";
 import { catchAsyncError } from "../utils/catchAsyncError";
 import ErrorHandler from '../utils/ErrorHandler';
+import UserModel from '../models/user.model';
 
 
 
@@ -168,7 +169,7 @@ export const updateQuestion = catchAsyncError(async (req: Request, res: Response
 
 
 
-// =========================== DELETE QUIZE ===========================
+// =========================== DELETE QUIZE QUESTION ===========================
 export const deleteQuestion = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { quizId, questionIndex } = req.params;
@@ -203,5 +204,68 @@ export const deleteQuestion = catchAsyncError(async (req: Request, res: Response
 
     } catch (error: any) {
         return next(new ErrorHandler(error.message, 400, "Error while deleting quiz question"));
+    }
+})
+
+
+
+
+// =========================== SUBMIT QUIZE ===========================
+export const submitQuiz = catchAsyncError(async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { userId, quizId, resultArray } = req.body;
+
+        // validate data
+        if (!quizId || !userId || !resultArray) {
+            return next(new ErrorHandler('userId, quizId, resultArray are required', 400, "Error while submitting quiz"));
+        }
+
+        // find user from DB
+        const user = await UserModel.findById(userId)
+        if (!user) {
+            return next(new ErrorHandler('User not found', 404, "Error while submitting quiz"));
+        }
+
+        // find quiz from DB by id
+        const quiz = await QuizModel.findById(quizId).select("+questions.correctAnswer"); // Find by 4-digit ID
+        if (!quiz) {
+            return next(new ErrorHandler('Quiz not found', 404, "Error while submitting quiz"));
+        }
+
+        // console.log("resultArray = ", resultArray)
+
+        // iterate through each answer and check answer id correct or not
+        let score = 0;
+
+        resultArray.forEach((answer: number, index: number) => {
+            // console.log(`quiz?.questions[${index}]?.correctAnswer = ${quiz?.questions[index]?.correctAnswer}`)
+            if (answer === quiz?.questions[index]?.correctAnswer) {
+                score++;
+            }
+        });
+        // console.log('score = ', score)
+
+        // Add the quiz results to the user's quizzesTaken array
+        user.quizzesTaken.push({
+            quizId,
+            score,
+            resultArray // actual result of student
+        });
+
+        await user.save()
+
+        // update quiz with current user score and userId
+        quiz.takenBy.push({ userId, score });
+        await quiz.save()
+
+        // send response
+        res.status(200).json({
+            success: true,
+            message: `User ${user.username}, (email: ${user.email}), scored: ${score} on the quiz titled - ${quiz.title}.`,
+            score
+        });
+
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 400, "Error while submitting quiz"));
     }
 })
