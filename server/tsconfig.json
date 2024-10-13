@@ -13,8 +13,10 @@
     "resolveJsonModule": true,
     "baseUrl": "./",
     "outDir": "./dist",
-    "types": ["node", "./types/express.d.ts"] 
+    "typeRoots": ["./node_modules/@types", "./types"], // Add your custom types folder here
+    "types": ["node"] 
   },
-  "include": ["types/**/*", "lib/**/*.ts", "server.ts","types.d.ts"],
-  "exclude": ["node_modules"]
+  "include": ["types/**/*", "lib/**/*.ts", "server.ts"],
+  "exclude": ["node_modules"],
+  "files": ["types.d.ts"]
 }
